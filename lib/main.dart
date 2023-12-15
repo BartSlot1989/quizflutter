@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pubquiz/controllers/quiz_controller.dart';
@@ -13,10 +13,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html_character_entities/html_character_entities.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
           bottomSheetTheme:
               const BottomSheetThemeData(backgroundColor: Colors.transparent),
         ),
-        home: QuizScreen(),
+        home: const QuizScreen(),
       ),
     );
   }
@@ -43,10 +44,20 @@ final quizQuestionsProvider = FutureProvider.autoDispose<List<Question>>(
 );
 
 class QuizScreen extends HookWidget {
+  const QuizScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final quizQuestions = useProvider(quizQuestionsProvider);
     final pageController = usePageController();
+    final quizController = useProvider(quizControllerProvider.notifier); // Get the controller
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (pageController.hasClients) {
+        // Now it's safe to access pageController.page
+        final currentPage = pageController.page;
+        // Your logic here...
+      }
+    });
+
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -57,50 +68,91 @@ class QuizScreen extends HookWidget {
           end: Alignment.bottomRight,
         ),
       ),
-      child: Scaffold(
+    
+      child:
+      Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: AppBar(
+        title: Text('Quiz App'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              quizController.reset(); // Resetting the quiz
+              pageController.jumpToPage(0); // Jump back to the first page
+            },
+          ),
+        ],
+      ),
         body: quizQuestions.when(
-          data: (questions) => _buildBody(context, pageController, questions),
+          data: (questions) => _buildBody(context, pageController, questions, quizController),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => QuizError(
-            message: error is Failure ? error.message : 'Something went wrong!',
+            message: error is Failure ? error.message ?? 'Some other error message': 'Something went wrong!',
           ),
         ),
         bottomSheet: quizQuestions.maybeWhen(
           data: (questions) {
-            final quizState = useProvider(quizControllerProvider.state);
-            if (!quizState.answered) return const SizedBox.shrink();
+            if ((pageController.page?.toInt() ?? 0) + 1 < questions.length) {
             return CustomButton(
-              title: pageController.page.toInt() + 1 < questions.length
-                  ? 'Next Question'
-                  : 'See Results',
+              title: 'Next Question',
+            // final quizState = useProvider(quizControllerProvider);
+            // if (!quizState.answered) return const SizedBox.shrink();
+            // return CustomButton(
+            //   title: (pageController.page?.toInt() ?? 0) + 1 < questions.length
+            //       ? 'Next Question'
+            //       : 'See Results',
               onTap: () {
-                context
-                    .read(quizControllerProvider)
-                    .nextQuestion(questions, pageController.page.toInt());
-                if (pageController.page.toInt() + 1 < questions.length) {
-                  pageController.nextPage(
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.linear,
-                  );
-                }
+                quizController.nextQuestion(questions, pageController.page?.toInt() ?? 0);
+                pageController.nextPage(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.linear,
+                );
               },
             );
+          } else {
+            return CustomButton(
+              title: 'See Results',
+              onTap: () {
+                quizController.nextQuestion(questions, pageController.page?.toInt() ?? 0);
+              },
+            );
+          
+          }
           },
+          
+
+
+          //       context
+          //           .read(quizControllerProvider)
+          //           .nextQuestion(questions, pageController.page.toInt());
+          //       if ((pageController.page?.toInt() ?? 0) + 1 < questions.length) {
+          //         pageController.nextPage(
+          //           duration: const Duration(milliseconds: 250),
+          //           curve: Curves.linear,
+          //         );
+          //       }
+          //     },
+          //   );
+          // },
           orElse: () => const SizedBox.shrink(),
-        ),
       ),
+    ),
+      // ... other widget code ...
     );
+
   }
+}
 
   Widget _buildBody(
     BuildContext context,
     PageController pageController,
     List<Question> questions,
+    QuizController quizController
   ) {
     if (questions.isEmpty) return QuizError(message: 'No questions found.');
 
-    final quizState = useProvider(quizControllerProvider.state);
+    final quizState = useProvider(quizControllerProvider);
     return quizState.status == QuizStatus.complete
         ? QuizResults(state: quizState, questions: questions)
         : QuizQuestions(
@@ -109,14 +161,13 @@ class QuizScreen extends HookWidget {
             questions: questions,
           );
   }
-}
 
 class QuizError extends StatelessWidget {
   final String message;
 
   const QuizError({
-    Key key,
-    @required this.message,
+    Key? key,
+    required this.message,
   }) : super(key: key);
 
   @override
@@ -156,9 +207,9 @@ class CustomButton extends StatelessWidget {
   final VoidCallback onTap;
 
   const CustomButton({
-    Key key,
-    @required this.title,
-    @required this.onTap,
+    Key? key,
+    required this.title,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -192,9 +243,9 @@ class QuizResults extends StatelessWidget {
   final List<Question> questions;
 
   const QuizResults({
-    Key key,
-    @required this.state,
-    @required this.questions,
+    Key? key,
+    required this.state,
+    required this.questions,
   }) : super(key: key);
 
   @override
@@ -226,7 +277,7 @@ class QuizResults extends StatelessWidget {
           title: 'New Quiz',
           onTap: () {
             context.refresh(quizRepositoryProvider);
-            context.read(quizControllerProvider).reset();
+
           },
         ),
       ],
@@ -240,10 +291,10 @@ class QuizQuestions extends StatelessWidget {
   final List<Question> questions;
 
   const QuizQuestions({
-    Key key,
-    @required this.pageController,
-    @required this.state,
-    @required this.questions,
+    Key? key,
+    required this.pageController,
+    required this.state,
+    required this.questions,
   }) : super(key: key);
 
   @override
@@ -284,20 +335,22 @@ class QuizQuestions extends StatelessWidget {
               endIndent: 20.0,
             ),
             Column(
-              children: question.answers
-                  .map(
-                    (e) => AnswerCard(
-                      answer: e,
-                      isSelected: e == state.selectedAnswer,
-                      isCorrect: e == question.correctAnswer,
-                      isDisplayingAnswer: state.answered,
-                      onTap: () => context
-                          .read(quizControllerProvider)
-                          .submitAnswer(question, e),
-                    ),
-                  )
-                  .toList(),
-            ),
+             children: question.answers
+              .map(
+                (answer) => AnswerCard(
+                  answer: answer,
+                  isSelected: answer == state.selectedAnswer,
+                  isCorrect: answer == question.correctAnswer,
+                  isDisplayingAnswer: state.answered,
+                  onTap: () {
+                    if (!state.answered) {
+                      context.read(quizControllerProvider.notifier).submitAnswer(question, answer);
+                    }
+                  },
+                ),
+              )
+              .toList(),
+        ),
           ],
         );
       },
@@ -313,12 +366,12 @@ class AnswerCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const AnswerCard({
-    Key key,
-    @required this.answer,
-    @required this.isSelected,
-    @required this.isCorrect,
-    @required this.isDisplayingAnswer,
-    @required this.onTap,
+    Key? key,
+    required this.answer,
+    required this.isSelected,
+    required this.isCorrect,
+    required this.isDisplayingAnswer,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -386,9 +439,9 @@ class CircularIcon extends StatelessWidget {
   final Color color;
 
   const CircularIcon({
-    Key key,
-    @required this.icon,
-    @required this.color,
+    Key? key,
+    required this.icon,
+    required this.color,
   }) : super(key: key);
 
   @override
