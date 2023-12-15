@@ -1,6 +1,6 @@
-# iaspectquiz
+# flutterquiz
 
-A new Flutter project.
+A new trivia project built with flutter.
 
 ## Getting Started
 
