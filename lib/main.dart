@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pubquiz/controllers/quiz_controller.dart';
@@ -63,7 +63,9 @@ class QuizScreen extends HookWidget {
           data: (questions) => _buildBody(context, pageController, questions),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => QuizError(
-            message: error is Failure ? error.message : 'Something went wrong!',
+            message: error is Failure
+                ? error.message ?? 'Some other error undefined'
+                : 'Beertap is not connected properly, retry!',
           ),
         ),
         bottomSheet: quizQuestions.maybeWhen(
@@ -387,8 +389,8 @@ class CircularIcon extends StatelessWidget {
 
   const CircularIcon({
     Key key,
-    @required this.icon,
-    @required this.color,
+    required this.icon,
+    required this.color,
   }) : super(key: key);
 
   @override
