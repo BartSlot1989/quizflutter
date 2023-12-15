@@ -10,7 +10,7 @@ import 'package:pubquiz/controllers/quiz/quiz_state.dart';
 import 'package:pubquiz/enums/difficulty.dart';
 import 'package:pubquiz/models/question_model.dart';
 import 'package:pubquiz/models/failure_model.dart';
-import 'package:pubquiz/quiz_screen.dart';
+// import 'package:pubquiz/quiz_screen.dart';
 import 'package:pubquiz/repositories/quiz_repository.dart';
 
 void main() {
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-final QuizQuestionsProvider = FutureProvider.autoDispose<List<Question>>(
+final quizQuestionsProvider = FutureProvider.autoDispose<List<Question>>(
     (ref) => ref.watch(quizRepostitoryProvider).getQuestions(
           numQuestions: 10,
           categoryId: Random().nextInt(24) + 9,
