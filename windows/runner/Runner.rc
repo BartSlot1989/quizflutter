@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "iaspectquiz" "\0"
+            VALUE "FileDescription", "pubquiz" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "iaspectquiz" "\0"
+            VALUE "InternalName", "pubquiz" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "iaspectquiz.exe" "\0"
-            VALUE "ProductName", "iaspectquiz" "\0"
+            VALUE "OriginalFilename", "pubquiz.exe" "\0"
+            VALUE "ProductName", "pubquiz" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

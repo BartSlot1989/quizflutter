@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:enum_to_string/enum_to_string.dart';
-import 'package:iaspectquiz/enums/difficulty.dart';
-import 'package:iaspectquiz/models/failure_model.dart';
-import 'package:iaspectquiz/models/question_model.dart';
-import 'package:iaspectquiz/repositories/base_quiz_repository.dart';
+import 'package:pubquiz/enums/difficulty.dart';
+import 'package:pubquiz/models/failure_model.dart';
+import 'package:pubquiz/models/question_model.dart';
+import 'package:pubquiz/repositories/base_quiz_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final dioProvider = Provider<Dio>((ref) => Dio());
@@ -22,7 +22,6 @@ class QuizRepository extends BaseQuizRepository {
     required int numQuestions,
     required Difficulty difficulty,
     required int categoryId,
-
   }) async {
     try {
       final queryParameters = {

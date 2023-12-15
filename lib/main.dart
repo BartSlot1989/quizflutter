@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html_character_entities/html_character_entities.dart';
-import 'package:iaspectquiz/controllers/quiz/quiz_controller.dart';
-import 'package:iaspectquiz/controllers/quiz/quiz_state.dart';
-import 'package:iaspectquiz/enums/difficulty.dart';
-import 'package:iaspectquiz/models/question_model.dart';
-import 'package:iaspectquiz/models/failure_model.dart';
-import 'package:iaspectquiz/quiz_screen.dart';
-import 'package:iaspectquiz/repositories/quiz_repository.dart';
+import 'package:pubquiz/controllers/quiz/quiz_controller.dart';
+import 'package:pubquiz/controllers/quiz/quiz_state.dart';
+import 'package:pubquiz/enums/difficulty.dart';
+import 'package:pubquiz/models/question_model.dart';
+import 'package:pubquiz/models/failure_model.dart';
+import 'package:pubquiz/quiz_screen.dart';
+import 'package:pubquiz/repositories/quiz_repository.dart';
 
 void main() {
   runApp(const MyApp());

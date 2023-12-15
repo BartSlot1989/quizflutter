@@ -1,6 +1,6 @@
 {
-    "name": "iaspectquiz",
-    "short_name": "iaspectquiz",
+    "name": "pubquiz",
+    "short_name": "pubquiz",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

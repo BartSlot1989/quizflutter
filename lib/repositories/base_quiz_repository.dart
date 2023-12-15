@@ -1,5 +1,5 @@
-import 'package:iaspectquiz/models/question_model.dart';
-import 'package:iaspectquiz/enums/difficulty.dart';
+import 'package:pubquiz/models/question_model.dart';
+import 'package:pubquiz/enums/difficulty.dart';
 
 abstract class BaseQuizRepository {
   Future<List<Question>> getQuestions({

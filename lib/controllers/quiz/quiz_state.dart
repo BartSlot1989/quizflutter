@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:iaspectquiz/models/question_model.dart';
+import 'package:pubquiz/models/question_model.dart';
 
 enum QuizStatus {
   initial,

@@ -1,5 +1,5 @@
-import 'package:iaspectquiz/controllers/quiz/quiz_state.dart';
-import 'package:iaspectquiz/models/question_model.dart';
+import 'package:pubquiz/controllers/quiz/quiz_state.dart';
+import 'package:pubquiz/models/question_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final quizControllerProvider =
